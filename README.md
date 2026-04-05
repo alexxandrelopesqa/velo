@@ -1,4 +1,4 @@
-# Velô Sprint - Configurador de Veículo Elétrico
+w# Velô Sprint - Configurador de Veículo Elétrico
 
 Aplicação web em React para configuração e compra do veículo elétrico **Velô Sprint**.
 
@@ -69,7 +69,7 @@ yarn add supabase -D
 
 # Login e vincular projeto
 yarn supabase login
-yarn supabase link --project-ref mttkmmbgewdvxruaffkk
+yarn supabase link --project-ref SUPABASE_PROJECT_ID
 
 # Aplicar migrações (cria tabelas e RLS)
 yarn supabase db push
