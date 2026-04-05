@@ -70,7 +70,24 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_order_public: {
+        Args: {
+          p_order_number: string
+          p_customer_cpf: string
+          p_customer_cpf_masked: string
+        }
+        Returns: {
+          order_number: string
+          color: string
+          wheel_type: string
+          optionals: string[] | null
+          payment_method: string
+          total_price: number
+          status: string
+          created_at: string
+          customer_name_masked: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

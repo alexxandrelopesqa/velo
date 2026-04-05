@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Search, Package, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import InputMask from 'react-input-mask';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -38,6 +39,7 @@ const colorLabels: Record<ExteriorColor, string> = {
 
 const OrderLookup = () => {
   const [orderId, setOrderId] = useState('');
+  const [cpf, setCpf] = useState('');
   const [searchedOrder, setSearchedOrder] = useState<Order | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -48,7 +50,7 @@ const OrderLookup = () => {
     setSearchedOrder(null);
     setIsLoading(true);
     
-    const { order, error } = await getOrderByNumber(orderId);
+    const { order, error } = await getOrderByNumber(orderId, cpf);
     
     setIsLoading(false);
     
@@ -77,7 +79,7 @@ const OrderLookup = () => {
             </div>
             <CardTitle className="text-2xl font-display">Consultar Pedido</CardTitle>
             <p className="text-muted-foreground mt-2">
-              Digite o número do seu pedido para verificar o status
+              Digite o número do pedido e, se possível, confirme também o CPF
             </p>
           </CardHeader>
           <CardContent>
@@ -85,14 +87,32 @@ const OrderLookup = () => {
               <div>
                 <Label htmlFor="order-id">Número do Pedido</Label>
                 <Input
-                  id="order-id"
-                  data-testid="search-order-id"
                   type="text"
+                  id="order-id"
                   placeholder="Ex: VLO-ABC123"
                   value={orderId}
                   onChange={(e) => setOrderId(e.target.value)}
                   className="mt-1"
                 />
+              </div>
+              <div>
+                <Label htmlFor="cpf-lookup">CPF do Pedido</Label>
+                <InputMask
+                  mask="999.999.999-99"
+                  value={cpf}
+                  onChange={(e) => setCpf(e.target.value)}
+                >
+                  {(inputProps: React.InputHTMLAttributes<HTMLInputElement>) => (
+                    <Input
+                      {...inputProps}
+                      type="text"
+                      id="cpf-lookup"
+                      data-testid="search-order-cpf"
+                      placeholder="000.000.000-00"
+                      className="mt-1"
+                    />
+                  )}
+                </InputMask>
               </div>
               <Button
                 type="submit"
@@ -125,7 +145,7 @@ const OrderLookup = () => {
                 Pedido não encontrado
               </h3>
               <p className="text-muted-foreground">
-                Verifique o número do pedido e tente novamente
+                Verifique o número do pedido e o CPF informado e tente novamente
               </p>
             </CardContent>
           </Card>
@@ -195,18 +215,10 @@ const OrderLookup = () => {
               {/* Customer Info */}
               <div className="border-t border-border pt-4">
                 <h4 className="text-sm font-medium text-foreground mb-3">Dados do Cliente</h4>
-                <div className="grid grid-cols-2 gap-4 text-sm">
+                <div className="grid grid-cols-1 gap-4 text-sm">
                   <div>
                     <p className="text-muted-foreground">Nome</p>
                     <p className="font-medium">{searchedOrder.customer.name} {searchedOrder.customer.surname}</p>
-                  </div>
-                  <div>
-                    <p className="text-muted-foreground">Email</p>
-                    <p className="font-medium">{searchedOrder.customer.email}</p>
-                  </div>
-                  <div>
-                    <p className="text-muted-foreground">Loja de Retirada</p>
-                    <p className="font-medium">{searchedOrder.customer.store}</p>
                   </div>
                   <div>
                     <p className="text-muted-foreground">Data do Pedido</p>
